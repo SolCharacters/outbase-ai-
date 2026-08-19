@@ -28,5 +28,9 @@ export async function getUser(): Promise<SessionUser | null> {
     }
   }
 
-  return getTestSessionUser();
+  try {
+    return getTestSessionUser();
+  } catch {
+    return null;
+  }
 }
