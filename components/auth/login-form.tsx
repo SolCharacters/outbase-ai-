@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
+  sendEmailVerification,
   GoogleAuthProvider,
   GithubAuthProvider,
 } from "firebase/auth";
@@ -33,6 +34,13 @@ export function LoginForm() {
     getRedirectResult(auth)
       .then(async (result) => {
         if (!active || !result) return;
+        if (!result.user.emailVerified) {
+          await sendEmailVerification(result.user, {
+            url: `${window.location.origin}/login`,
+          });
+          router.push(`/verify-email?email=${encodeURIComponent(result.user.email ?? "")}`);
+          return;
+        }
         const idToken = await getIdToken(result.user);
         const res = await fetch("/api/auth/login", {
           method: "POST",
@@ -83,6 +91,13 @@ export function LoginForm() {
 
     try {
       const credential = await signInWithEmailAndPassword(auth, email, password);
+      if (!credential.user.emailVerified) {
+        await sendEmailVerification(credential.user, {
+          url: `${window.location.origin}/login`,
+        });
+        router.push(`/verify-email?email=${encodeURIComponent(credential.user.email ?? email)}`);
+        return;
+      }
       const idToken = await getIdToken(credential.user);
       if (await finishLogin(idToken)) {
         router.push(next);
@@ -105,6 +120,13 @@ export function LoginForm() {
 
     try {
       const result = await signInWithPopup(auth, provider);
+      if (!result.user.emailVerified) {
+        await sendEmailVerification(result.user, {
+          url: `${window.location.origin}/login`,
+        });
+        router.push(`/verify-email?email=${encodeURIComponent(result.user.email ?? "")}`);
+        return;
+      }
       const idToken = await getIdToken(result.user);
       if (await finishLogin(idToken)) {
         router.push(next);

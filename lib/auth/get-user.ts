@@ -13,6 +13,8 @@ export async function getUser(): Promise<SessionUser | null> {
       if (!token) return null;
 
       const decoded = await getFirebaseAdminAuth().verifySessionCookie(token, true);
+      if (!decoded.email_verified) return null;
+
       const email = decoded.email ?? "";
       const workspace = (decoded.name as string | undefined) || "Workspace";
       const name = email.split("@")[0] || "User";

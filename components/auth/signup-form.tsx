@@ -11,6 +11,7 @@ import {
   signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
+  sendEmailVerification,
   GoogleAuthProvider,
   GithubAuthProvider,
 } from "firebase/auth";
@@ -33,6 +34,13 @@ export function SignupForm() {
     getRedirectResult(auth)
       .then(async (result) => {
         if (!active || !result) return;
+        if (!result.user.emailVerified) {
+          await sendEmailVerification(result.user, {
+            url: `${window.location.origin}/login`,
+          });
+          router.push(`/verify-email?email=${encodeURIComponent(result.user.email ?? "")}`);
+          return;
+        }
         const idToken = await getIdToken(result.user);
         const res = await fetch("/api/auth/signup", {
           method: "POST",
@@ -85,12 +93,11 @@ export function SignupForm() {
       await updateProfile(credential.user, {
         displayName: workspace.trim() || email.split("@")[0] || "Workspace",
       });
-      const idToken = await getIdToken(credential.user, true);
-      const redirect = await finishSignup(idToken);
-      if (redirect) {
-        router.push(redirect);
-        router.refresh();
-      }
+      await sendEmailVerification(credential.user, {
+        url: `${window.location.origin}/login`,
+      });
+      router.push(`/verify-email?email=${encodeURIComponent(credential.user.email ?? email)}`);
+      router.refresh();
     } catch (err: any) {
       setError(err?.message ?? "Unable to create account.");
     } finally {
@@ -108,6 +115,13 @@ export function SignupForm() {
 
     try {
       const result = await signInWithPopup(auth, provider);
+      if (!result.user.emailVerified) {
+        await sendEmailVerification(result.user, {
+          url: `${window.location.origin}/login`,
+        });
+        router.push(`/verify-email?email=${encodeURIComponent(result.user.email ?? "")}`);
+        return;
+      }
       const idToken = await getIdToken(result.user);
       const redirect = await finishSignup(idToken);
       if (redirect) {

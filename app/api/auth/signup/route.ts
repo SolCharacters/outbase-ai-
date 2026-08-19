@@ -29,8 +29,13 @@ export async function POST(request: Request) {
     }
 
     try {
+      const adminAuth = getFirebaseAdminAuth();
+      const decoded = await adminAuth.verifyIdToken(idToken, true);
+      if (!decoded.email_verified) {
+        return NextResponse.json({ error: "Email not verified", requiresVerification: true }, { status: 403 });
+      }
       const expiresIn = 60 * 60 * 24 * 7 * 1000;
-      const sessionCookie = await getFirebaseAdminAuth().createSessionCookie(idToken, { expiresIn });
+      const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
       const response = NextResponse.json({ ok: true, redirect: "/onboarding" });
       response.cookies.set(SESSION_COOKIE, sessionCookie, sessionCookieOptions());
       return response;
