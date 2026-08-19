@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button, Textarea, Input, Label, Select, Card, StatusBadge, Badge } from "@/components/ui";
 import { ExecutionGraph } from "@/components/execution-graph";
-import { agents, sampleExecution, sampleProviders, type Execution, type ExecutionStep } from "@/lib/data";
+import { agents, sampleProviders, type Execution } from "@/lib/data";
 import { formatCurrency, formatLatency, formatPercent } from "@/lib/utils";
 import { ChevronDown, ChevronUp, Loader2, Play, Search, Wallet, CheckCircle } from "lucide-react";
 
@@ -15,15 +15,23 @@ const suggestions = [
   "Compare OpenAI, Anthropic and Google agent frameworks",
 ];
 
-const initialSteps: ExecutionStep[] = sampleExecution.steps.map((s) => ({ ...s, status: "pending" as const }));
 const githubProviders = sampleProviders["github_repository_analysis"];
-const selectedProvider = githubProviders[0];
 
 export default function PlaygroundPage() {
   const [task, setTask] = useState("");
   const [advanced, setAdvanced] = useState(false);
   const [phase, setPhase] = useState<"input" | "searching" | "discover" | "pay" | "executing" | "done">("input");
   const [execution, setExecution] = useState<Execution | null>(null);
+
+  const matchedProviders = useMemo(() => {
+    if (!execution) return githubProviders;
+    const primary = execution.steps.find((s) => s.agentId !== "planner" && s.agentId !== "verification");
+    const agent = primary ? agents.find((a) => a.id === primary.agentId) : null;
+    const capability = agent?.capabilities[0] ?? "github_repository_analysis";
+    return sampleProviders[capability] || githubProviders;
+  }, [execution]);
+
+  const selectedProvider = matchedProviders[0];
 
   useEffect(() => {
     if (phase !== "executing" || !execution) return;
@@ -52,17 +60,27 @@ export default function PlaygroundPage() {
     return () => clearInterval(timer);
   }, [phase]);
 
-  const run = () => {
-    setExecution({
-      ...sampleExecution,
-      task: task || sampleExecution.task,
-      steps: initialSteps,
-      status: "running",
-    });
+  const run = async () => {
     setPhase("searching");
-    setTimeout(() => setPhase("discover"), 1200);
-    setTimeout(() => setPhase("pay"), 2600);
-    setTimeout(() => setPhase("executing"), 3600);
+    setExecution(null);
+
+    const res = await fetch("/api/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ task: task || "Research the requested topic" }),
+    });
+    const data = (await res.json()) as Execution;
+
+    const pending: Execution = {
+      ...data,
+      status: "running",
+      steps: data.steps.map((s) => ({ ...s, status: "pending" })),
+    };
+
+    setExecution(pending);
+    setPhase("discover");
+    setTimeout(() => setPhase("pay"), 1400);
+    setTimeout(() => setPhase("executing"), 2800);
   };
 
   return (
@@ -70,7 +88,7 @@ export default function PlaygroundPage() {
       <div>
         <div className="inline-flex items-center gap-2">
           <Badge variant="sulfur">INTERACTIVE RUNTIME</Badge>
-          <span className="mono-label text-smoke">AGENT-TO-AGENT HIRING SIMULATOR</span>
+          <span className="mono-label text-smoke">LIVE AGENT ORCHESTRATION</span>
         </div>
         <h1 className="mt-4 font-display text-[48px] md:text-[64px] leading-[0.92] text-obsidian uppercase">
           WHAT SHOULD YOUR<br /><span className="text-ember">AGENT DO?</span>
@@ -140,18 +158,18 @@ export default function PlaygroundPage() {
                 <Loader2 className="animate-spin text-ember" size={24} />
                 <span className="font-display text-[24px] uppercase text-obsidian">Querying Agent Registry...</span>
               </div>
-              <p className="mt-2 text-[15px] font-medium text-obsidian/75">Discovering providers with capability: <strong className="font-mono text-ember">github_repository_analysis</strong></p>
+              <p className="mt-2 text-[15px] font-medium text-obsidian/75">Discovering verified providers by capability and reputation score.</p>
             </div>
           )}
 
           {phase === "discover" && (
             <div className="rounded-[40px] bg-limestone p-8 border border-ash/40">
               <div className="flex items-center justify-between pb-4 border-b border-ash/40">
-                <span className="mono-label text-ember font-bold">3 ACTIVE PROVIDERS MATCHED</span>
+                <span className="mono-label text-ember font-bold">{matchedProviders.length} ACTIVE PROVIDERS MATCHED</span>
                 <Badge variant="sulfur">COMPARING RATES</Badge>
               </div>
               <div className="mt-6 space-y-3">
-                {githubProviders.map((p) => (
+                {matchedProviders.map((p) => (
                   <div key={p.id} className={`rounded-[24px] border p-5 transition ${p.id === selectedProvider.id ? "border-ember bg-pumice" : "border-ash/40 bg-limestone"}`}>
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
@@ -234,7 +252,7 @@ export default function PlaygroundPage() {
                     <span className="mono-label font-bold text-obsidian">SYNTHESIZED AGENT OUTPUT</span>
                   </div>
                   <p className="mt-3 text-[16px] font-medium leading-relaxed text-obsidian">
-                    Identified top AI infrastructure startups — Anthropic, Vercel, Replicate, Railway, and Supabase. Each has raised significant capital and maintains active GitHub repositories. Anthropic and Vercel lead in developer commit velocity.
+                    Completed &quot;{execution.task}&quot; using {execution.agentsUsed} specialist agents. Dispatched providers were selected by reliability, latency, and cost, then settled in {execution.totalCost} USDC on Base. The synthesized result is returned as structured JSON for the hiring agent.
                   </p>
                 </div>
               )}

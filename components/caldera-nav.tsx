@@ -91,7 +91,7 @@ export function CalderaNav() {
 
       {open && (
         <div id="primary-navigation" className="fixed inset-0 top-[76px] z-40 overscroll-contain bg-pumice/98 px-6 py-8 md:hidden">
-          <div className="mx-auto flex max-w-[1280px] flex-col gap-5 text-[22px] font-medium">
+          <div className="mx-auto flex max-w-[1280px] flex-col gap-5 text-[18px] font-medium sm:text-[22px]">
             {navLinks.map((l) => (
               <Link key={l.href} href={l.href} className="hover:text-ember" onClick={() => setOpen(false)}>
                 {l.label}

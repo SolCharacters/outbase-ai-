@@ -1,65 +1,127 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { GitBranch, Globe } from "lucide-react";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  getIdToken,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+} from "firebase/auth";
 import { Button, Input, Label } from "@/components/ui";
-import { createClient } from "@/lib/supabase/client";
-
-const supabaseReady =
-  typeof window !== "undefined" &&
-  Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+import { auth } from "@/lib/firebase/client";
 
 export function SignupForm() {
   const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [workspace, setWorkspace] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (!auth) return;
+    let active = true;
+
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (!active || !result) return;
+        const idToken = await getIdToken(result.user);
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error ?? "Unable to create account.");
+          return;
+        }
+        sessionStorage.removeItem("auth_next");
+        router.push(data.redirect ?? "/onboarding");
+        router.refresh();
+      })
+      .catch((err: any) => {
+        if (active) setError(err?.message ?? "Social sign-up failed.");
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
+
+  async function finishSignup(idToken: string) {
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.error ?? "Unable to create account.");
+      return null;
+    }
+    return data.redirect ?? "/onboarding";
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!auth) {
+      setError("Authentication is not configured.");
+      return;
+    }
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, workspace }),
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(credential.user, {
+        displayName: workspace.trim() || email.split("@")[0] || "Workspace",
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Unable to create account.");
-        return;
+      const idToken = await getIdToken(credential.user, true);
+      const redirect = await finishSignup(idToken);
+      if (redirect) {
+        router.push(redirect);
+        router.refresh();
       }
-
-      router.push(data.redirect ?? "/onboarding");
-      router.refresh();
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err: any) {
+      setError(err?.message ?? "Unable to create account.");
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleOAuth(provider: "github" | "google") {
-    if (!supabaseReady) {
-      setError("Social sign-in is not available right now. Please sign up with email.");
+  async function handleOAuth(providerName: "github" | "google") {
+    if (!auth) {
+      setError("Authentication is not configured.");
       return;
     }
+    setError(null);
+    const provider = providerName === "google" ? new GoogleAuthProvider() : new GithubAuthProvider();
 
-    const supabase = createClient();
-    const origin = window.location.origin;
-    await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/onboarding")}`,
-      },
-    });
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await getIdToken(result.user);
+      const redirect = await finishSignup(idToken);
+      if (redirect) {
+        router.push(redirect);
+        router.refresh();
+      }
+    } catch (err: any) {
+      if (err?.code === "auth/popup-blocked" || err?.code === "auth/popup-closed-by-user") {
+        sessionStorage.setItem("auth_next", "/onboarding");
+        await signInWithRedirect(auth, provider);
+      } else {
+        setError(err?.message ?? "Social sign-up failed.");
+      }
+    }
   }
 
   return (

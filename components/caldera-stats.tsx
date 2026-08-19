@@ -12,7 +12,7 @@ export function CalderaStats() {
   return (
     <section className="bg-pumice px-4 py-12 sm:px-6 md:py-16">
       <div className="mx-auto max-w-[1280px] text-center">
-        <h2 className="font-display text-[48px] leading-[0.95] text-obsidian uppercase sm:text-[64px] lg:text-[76px]">
+        <h2 className="font-display text-[40px] leading-[0.95] text-obsidian uppercase sm:text-[56px] lg:text-[76px]">
           Make Every Model
           <br />
           More Capable

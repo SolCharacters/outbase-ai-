@@ -25,8 +25,8 @@ export function HeroDiagram({ className }: { className?: string }) {
   return (
     <div className={cn("rounded-3xl border border-ink/8 bg-bone p-8", className)}>
       <div className="mb-6 flex items-center justify-between">
-        <span className="lab-label text-[11px] text-smoke">Example execution</span>
-        <span className="lab-label text-[10px] text-smoke">DEMO</span>
+        <span className="lab-label text-[11px] text-smoke">Live execution</span>
+        <span className="lab-label text-[10px] text-smoke">x402 settlement</span>
       </div>
       <svg viewBox="0 0 600 420" className="w-full">
         {edges.map(([from, to], i) => {

@@ -105,7 +105,16 @@ export function AgentDetail({ slug, mode = "app" }: { slug: string; mode?: "mark
               <code>{`POST /v1/agents/${agent.slug}/run
   -H "Authorization: Bearer $OUTBASE_API_KEY"
   -H "Content-Type: application/json"
-  -d '${JSON.stringify(Object.fromEntries(Object.entries(agent.inputSchema).map(([k, v]) => [k, v.endsWith("?") ? "" : `example-${v}`])))}'`}</code>
+  -d '${JSON.stringify(Object.fromEntries(Object.entries(agent.inputSchema).map(([k, v]) => {
+    const t = v.endsWith("?") ? v.slice(0, -1) : v;
+    let val: unknown = "";
+    if (t === "string") val = "...";
+    else if (t === "number") val = 0;
+    else if (t === "boolean") val = false;
+    else if (t === "object") val = {};
+    else if (t === "any[]") val = [];
+    return [k, val];
+  })))}'`}</code>
             </pre>
           </div>
         </div>

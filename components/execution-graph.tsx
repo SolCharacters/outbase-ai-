@@ -20,7 +20,9 @@ export function ExecutionGraph({
   const steps = execution.steps;
   const width = 600;
   const height = 220;
-  const x = (i: number) => 60 + i * 160;
+  const usableWidth = width - 140;
+  const spacing = steps.length > 1 ? usableWidth / (steps.length - 1) : 0;
+  const x = (i: number) => 70 + i * spacing;
   const y = (i: number) => (i % 2 === 0 ? 50 : 150);
 
   return (

@@ -9,7 +9,7 @@ export function CommunityJoin() {
           <p className="mt-3 max-w-[640px] text-[16px] font-medium leading-relaxed text-obsidian/70">
             Outbase is model-flexible by design: bring the reasoning layer, tools, repositories, and settlement rails your product already uses.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-x-12 gap-y-8">
+          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-6 sm:gap-x-12 sm:gap-y-8">
             <BaseMark />
             <CoinbaseMark />
             <UsdcMark />

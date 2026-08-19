@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { agents, sampleExecution } from "@/lib/data";
+import { agents } from "@/lib/data";
+import { generateExecution } from "@/lib/execution";
 
 export async function POST(
   request: Request,
@@ -10,20 +11,16 @@ export async function POST(
   if (!agent) {
     return NextResponse.json({ error: "Agent not found" }, { status: 404 });
   }
+
   const body = await request.json().catch(() => ({}));
+  const task = typeof body.task === "string" ? body.task : `Run ${agent.name}`;
+  const execution = generateExecution(task, agent.id);
+
   return NextResponse.json({
-    id: `exe_${Math.floor(Math.random() * 1_000_000)}`,
-    status: "completed",
-    agent: agent.id,
-    task: body.task || `Run ${agent.name}`,
+    ...execution,
     result: {
-      summary: `${agent.name} completed the requested work.`,
-      data: {},
+      summary: `${agent.name} completed: ${task}`,
+      data: null,
     },
-    cost: agent.startingPrice,
-    currency: agent.currency,
-    network: agent.network,
-    duration_ms: agent.avgLatencyMs,
-    settlement: "settled",
   });
 }

@@ -128,7 +128,7 @@ export function CapabilityShowcase() {
             <button
               key={c.id}
               onClick={() => setActiveTab(c.id)}
-              className={`flex items-center gap-2.5 rounded-[800px] px-6 py-3 text-[14px] font-bold uppercase transition cursor-pointer ${
+              className={`flex items-center gap-2.5 rounded-[800px] px-4 py-2.5 text-[13px] font-bold uppercase transition cursor-pointer sm:px-6 sm:py-3 sm:text-[14px] ${
                 activeTab === c.id
                   ? "bg-ember text-chalk"
                   : "bg-limestone text-obsidian/80 hover:bg-pumice border border-ash/40"
@@ -141,7 +141,7 @@ export function CapabilityShowcase() {
         </div>
 
         {/* Active Content Card */}
-        <div className="mt-6 rounded-[40px] bg-limestone p-6 md:p-10 border border-ash/40 grid gap-8 lg:grid-cols-2 items-center">
+        <div className="mt-6 rounded-[40px] bg-limestone p-5 sm:p-8 md:p-10 border border-ash/40 grid gap-8 lg:grid-cols-2 items-start">
           <div>
             <div className="flex items-center gap-3">
               <span className="mono-label rounded-[800px] bg-sulfur px-3 py-1 text-obsidian font-bold text-[11px]">
@@ -150,7 +150,7 @@ export function CapabilityShowcase() {
               <span className="mono-label text-smoke">{active.latency} P95 LATENCY</span>
             </div>
             
-            <h3 className="mt-6 font-display text-[40px] md:text-[48px] leading-[0.95] text-obsidian uppercase">
+            <h3 className="mt-6 font-display text-[32px] sm:text-[40px] md:text-[48px] leading-[0.95] text-obsidian uppercase">
               {active.title}
             </h3>
             
@@ -158,45 +158,45 @@ export function CapabilityShowcase() {
               {active.description}
             </p>
 
-            <div className="mt-8 grid grid-cols-3 gap-4 border-y border-ash/40 py-6">
+            <div className="mt-8 grid grid-cols-3 gap-2 sm:gap-4 border-y border-ash/40 py-6 min-w-0">
               <div>
                 <div className="mono-label text-smoke">PRICE / RUN</div>
-                <div className="mt-1 font-mono text-[22px] font-bold text-ember">
+                <div className="mt-1 font-mono text-[18px] sm:text-[22px] font-bold break-words text-ember">
                   {formatCurrency(active.price)} USDC
                 </div>
               </div>
               <div>
                 <div className="mono-label text-smoke">RELIABILITY</div>
-                <div className="mt-1 font-mono text-[22px] font-bold text-obsidian">
+                <div className="mt-1 font-mono text-[18px] sm:text-[22px] font-bold break-words text-obsidian">
                   {formatPercent(active.reliability)}
                 </div>
               </div>
               <div>
                 <div className="mono-label text-smoke">SETTLEMENT</div>
-                <div className="mt-1 font-mono text-[22px] font-bold text-obsidian">
+                <div className="mt-1 font-mono text-[18px] sm:text-[22px] font-bold break-words text-obsidian">
                   BASE L2
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              <CtaLink href="/login?next=/app/playground">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+              <CtaLink href="/login?next=/app/playground" className="w-full sm:w-auto">
                 Test in Playground
                 <ArrowRight size={15} />
               </CtaLink>
-              <CtaLink href="/docs" variant="secondary">
+              <CtaLink href="/docs" variant="secondary" className="w-full sm:w-auto">
                 API Specification
               </CtaLink>
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="min-w-0 space-y-4">
             <div className="overflow-hidden rounded-[28px] bg-obsidian p-6 text-chalk border border-chalk/10">
               <div className="flex items-center justify-between pb-3 border-b border-chalk/10 mb-4">
                 <span className="mono-label text-sulfur text-[11px]">DISPATCH REQUEST PAYLOAD</span>
                 <span className="mono-label text-chalk/50 text-[10px]">JSON</span>
               </div>
-              <pre className="overflow-x-auto text-[12px] font-mono text-chalk/90 leading-relaxed">
+              <pre className="overflow-x-auto w-full min-w-0 text-[11px] sm:text-[12px] font-mono text-chalk/90 leading-relaxed">
                 <code>{active.request}</code>
               </pre>
             </div>
@@ -206,7 +206,7 @@ export function CapabilityShowcase() {
                 <span className="mono-label text-ember text-[11px] font-bold">DETERMINISTIC RESPONSE & ATTESTATION</span>
                 <span className="mono-label text-chalk/50 text-[10px]">200 OK</span>
               </div>
-              <pre className="overflow-x-auto text-[12px] font-mono text-chalk/90 leading-relaxed">
+              <pre className="overflow-x-auto w-full min-w-0 text-[11px] sm:text-[12px] font-mono text-chalk/90 leading-relaxed">
                 <code>{active.response}</code>
               </pre>
             </div>
@@ -215,7 +215,7 @@ export function CapabilityShowcase() {
 
         <div className="mt-6 rounded-[32px] bg-limestone px-6 py-5 sm:px-8">
           <span className="mono-label text-smoke">Projects built with Outbase</span>
-          <div className="mt-5 flex flex-wrap items-center gap-x-10 gap-y-5">
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-4 sm:gap-x-10 sm:gap-y-5">
             <BaseMark />
             <GitHubMark />
             <OpenAIMark />

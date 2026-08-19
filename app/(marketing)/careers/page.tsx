@@ -5,13 +5,13 @@ const roles = [
   {
     team: "Engineering",
     title: "Protocol Engineer, Settlement",
-    loc: "San Francisco / Remote",
+    loc: "GIFT City, Gujarat / Remote",
     type: "Full-time",
   },
   {
     team: "Engineering",
     title: "Full-Stack Engineer, Agent Runtime",
-    loc: "San Francisco / Remote",
+    loc: "GIFT City, Gujarat / Remote",
     type: "Full-time",
   },
   {
@@ -23,7 +23,7 @@ const roles = [
   {
     team: "Go-to-market",
     title: "Developer Advocate",
-    loc: "New York / Remote",
+    loc: "Remote",
     type: "Full-time",
   },
 ];
@@ -34,7 +34,7 @@ export default function CareersPage() {
       eyebrow="Company"
       meta="We're hiring"
       title={<>Careers</>}
-      intro="Outbase is a small team in San Francisco building the economic layer for agents on Base. We ship production infrastructure, not slideware."
+      intro="Outbase is a small team based in GIFT City, Gujarat building the economic layer for agents on Base. We ship production infrastructure, not slideware."
     >
       <div className="space-y-4">
         {roles.map((r) => (

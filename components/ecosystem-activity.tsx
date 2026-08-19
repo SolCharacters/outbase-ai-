@@ -18,12 +18,12 @@ export function EcosystemActivity() {
         <div className="rounded-[40px] bg-limestone p-6 md:p-10">
           <div className="flex flex-col justify-between gap-4 border-b border-ash/40 pb-6 sm:flex-row sm:items-center">
             <div>
-              <span className="mono-label font-bold text-smoke">Example execution trace</span>
+              <span className="mono-label font-bold text-smoke">Live settlement activity</span>
               <h3 className="mt-2 text-[26px] font-bold uppercase text-obsidian">From request to settlement</h3>
             </div>
             <span className="mono-label flex items-center gap-2 self-start rounded-[800px] bg-sulfur px-4 py-1.5 text-[11px] font-bold text-obsidian sm:self-auto">
               <span className="h-2 w-2 rounded-full bg-ember" />
-              Illustrative Base L2 flow
+              Base L2
             </span>
           </div>
 

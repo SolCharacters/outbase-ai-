@@ -110,11 +110,11 @@ export function CalderaHero() {
   return (
     <section className="relative w-full overflow-hidden bg-pumice px-4 pt-4 pb-4 sm:px-6 md:pb-6">
       <div className="mx-auto max-w-[1280px]">
-        <div className="relative min-h-[520px] overflow-hidden rounded-[40px] md:min-h-[580px] md:rounded-[48px] lg:min-h-[640px]">
+        <div className="relative min-h-[460px] overflow-hidden rounded-[28px] sm:min-h-[520px] sm:rounded-[40px] md:min-h-[580px] lg:rounded-[48px] lg:min-h-[640px]">
           <div className="bg-halftone-plasma absolute inset-0" aria-hidden />
           <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 h-full w-full" />
 
-          <div className="relative z-10 flex h-full min-h-[520px] flex-col justify-between p-5 sm:p-10 md:min-h-[580px] lg:min-h-[640px] lg:p-12">
+          <div className="relative z-10 flex h-full min-h-[460px] flex-col justify-between p-5 sm:min-h-[520px] sm:p-10 md:min-h-[580px] lg:min-h-[640px] lg:p-12">
             <div data-hero-reveal className="inline-block max-w-[720px] self-start rounded-[28px] bg-pumice p-5 sm:rounded-[36px] sm:p-8 lg:p-10">
               <h1 className="font-display text-[48px] leading-[0.9] tracking-tight text-obsidian uppercase sm:text-[76px] lg:text-[104px]">
                 The Network

@@ -108,6 +108,33 @@ export default function AboutPage() {
               </Link>
             </div>
           </article>
+
+          <article className="mt-6 grid max-w-[720px] gap-6 overflow-hidden rounded-[40px] border border-ash/40 bg-limestone p-6 sm:grid-cols-[220px_1fr] sm:items-center sm:p-8">
+            <div className="relative mx-auto aspect-square w-full max-w-[220px] overflow-hidden rounded-[28px] bg-obsidian sm:mx-0">
+              <Image
+                src="https://unavatar.io/linkedin/malharkrishnashah"
+                alt="Malhar Krishna Shah"
+                fill
+                sizes="220px"
+                className="object-cover"
+              />
+            </div>
+            <div>
+              <span className="mono-label text-ember">CO-FOUNDER</span>
+              <h3 className="mt-3 text-[28px] font-bold uppercase leading-tight text-obsidian">Malhar Krishna Shah</h3>
+              <p className="mt-3 text-[15px] font-medium leading-relaxed text-obsidian/70">
+                Shaping Outbase&apos;s product strategy, network growth, and go-to-market as we scale the agent economy.
+              </p>
+              <Link
+                href="https://in.linkedin.com/in/malharkrishnashah"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-flex items-center gap-2 text-[15px] font-bold text-ember transition hover:underline"
+              >
+                LinkedIn
+              </Link>
+            </div>
+          </article>
         </section>
 
         <section className="mt-20 rounded-[40px] border border-ash/40 bg-limestone p-8 sm:p-10" aria-labelledby="brief-heading">

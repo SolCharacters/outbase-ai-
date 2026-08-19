@@ -1,27 +1,31 @@
-import { createClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "./config";
+import { cookies } from "next/headers";
+import { isFirebaseConfigured } from "./config";
+import { getFirebaseAdminAuth } from "@/lib/firebase/server";
 import { getTestSessionUser } from "./session";
+import { SESSION_COOKIE } from "./constants";
 import type { SessionUser } from "./constants";
 
 export async function getUser(): Promise<SessionUser | null> {
-  if (isSupabaseConfigured()) {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  if (isFirebaseConfigured()) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE)?.value;
+    if (!token) return null;
 
-    if (!user) return null;
+    try {
+      const decoded = await getFirebaseAdminAuth().verifySessionCookie(token, true);
+      const email = decoded.email ?? "";
+      const workspace = (decoded.name as string | undefined) || "Workspace";
+      const name = email.split("@")[0] || "User";
 
-    return {
-      id: user.id,
-      email: user.email ?? "",
-      name:
-        (user.user_metadata?.full_name as string | undefined) ??
-        (user.user_metadata?.name as string | undefined) ??
-        user.email?.split("@")[0] ??
-        "User",
-      workspace: (user.user_metadata?.workspace as string | undefined) ?? "Workspace",
-    };
+      return {
+        id: decoded.uid,
+        email,
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        workspace,
+      };
+    } catch {
+      return null;
+    }
   }
 
   return getTestSessionUser();

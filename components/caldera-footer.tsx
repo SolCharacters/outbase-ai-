@@ -85,22 +85,10 @@ export function CalderaFooter() {
 
           <div className="mt-10 w-full border-b-[1.5px] border-dotted border-obsidian/30" />
 
-          <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <address className="max-w-[360px] not-italic text-[13px] font-medium leading-relaxed text-smoke">
-              <span className="block text-[14px] font-bold uppercase tracking-wide text-obsidian">
-                Outbase Technologies LLP
-              </span>
-              <span className="mt-2 block">
-                Office No. 2614, 26th Floor, GIFT Tower 1 (GIFT One),
-                <br />
-                Block 56, Road 5C, Zone 5,
-                <br />
-                GIFT City, Gandhinagar,
-                <br />
-                Gujarat – 382355, India
-              </span>
-              <span className="mt-3 block">© 2026 Outbase Technologies LLP. All rights reserved.</span>
-            </address>
+          <div className="mt-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <span className="text-[13px] font-medium text-obsidian/70">
+              © 2026 Outbase Technologies LLP. All rights reserved.
+            </span>
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-[13px] font-medium text-obsidian/70">
               <Link href="/privacy" className="hover:text-ember">
                 Privacy

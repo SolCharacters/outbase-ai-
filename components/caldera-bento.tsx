@@ -19,7 +19,7 @@ export function CalderaBento() {
       <div className="relative mx-auto max-w-[1280px]">
         {/* Section Heading matching Screenshot 3 */}
         <div className="max-w-[800px] mb-10">
-          <h2 className="font-display text-[64px] sm:text-[84px] lg:text-[104px] leading-[0.92] text-obsidian uppercase tracking-tight">
+          <h2 className="font-display text-[48px] sm:text-[64px] md:text-[84px] lg:text-[104px] leading-[0.92] text-obsidian uppercase tracking-tight">
             More Is More.<br />Go Horizontal.
           </h2>
         </div>
@@ -28,7 +28,7 @@ export function CalderaBento() {
         <div className="grid gap-6 md:grid-cols-2">
           
           {/* Bento Card 1: Agent Engine Content */}
-          <div className="rounded-[40px] bg-limestone p-8 sm:p-12 border border-ash/40 flex flex-col justify-between min-h-[360px]">
+          <div className="rounded-[40px] bg-limestone p-8 sm:p-12 border border-ash/40 flex flex-col justify-between min-h-[300px] sm:min-h-[360px]">
             <div>
               {/* Black square icon with star */}
               <div className="flex h-14 w-14 items-center justify-center rounded-[20px] bg-obsidian text-chalk">
@@ -45,7 +45,7 @@ export function CalderaBento() {
                 </svg>
               </div>
 
-              <h3 className="mt-12 text-[32px] sm:text-[38px] font-bold uppercase text-obsidian leading-[1.05]">
+              <h3 className="mt-12 text-[26px] sm:text-[32px] md:text-[38px] font-bold uppercase text-obsidian leading-[1.05]">
                 The Agent Network,<br />For Real Workflows
               </h3>
               
@@ -69,7 +69,7 @@ export function CalderaBento() {
           <IsometricSettlementEngine />
 
           {/* Bento Card 4: Connected Via Base Content */}
-          <div className="rounded-[40px] bg-limestone p-8 sm:p-12 border border-ash/40 flex flex-col justify-between min-h-[360px]">
+          <div className="rounded-[40px] bg-limestone p-8 sm:p-12 border border-ash/40 flex flex-col justify-between min-h-[300px] sm:min-h-[360px]">
             <div>
               {/* Black square icon with cluster */}
               <div className="flex h-14 w-14 items-center justify-center rounded-[20px] bg-obsidian text-chalk">
@@ -82,7 +82,7 @@ export function CalderaBento() {
                 </svg>
               </div>
 
-              <h3 className="mt-12 text-[32px] sm:text-[38px] font-bold uppercase text-obsidian leading-[1.05]">
+              <h3 className="mt-12 text-[26px] sm:text-[32px] md:text-[38px] font-bold uppercase text-obsidian leading-[1.05]">
                 Connected By Base L2
               </h3>
               
